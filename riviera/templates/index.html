@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riviera</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <script src="https://kit.fontawesome.com/43124a3f7d.js" crossorigin="anonymous" defer></script>
+    <script src="/static/js/index.js" defer></script>
+    <script>
+        window.onload = function () {
+          document.body.classList.add('loaded_hiding');
+          window.setTimeout(function () {
+            document.body.classList.add('loaded');
+            document.body.classList.remove('loaded_hiding');
+          }, 500);
+        }
+      </script>
+</head>
+
+<body>
+
+    <div class="preloader">
+        <div class="preloader__row">
+            <div class="preloader__text">Пожалуйста подождите, идет загрузка...</div>
+            <div class="preloader__image"><i class="fa-solid fa-spinner fa-spin"></i></div>
+        </div>
+    </div>
+
+    <i class="fa-solid fa-volume-high fa-beat soundbutton"></i>
+    <audio class="audio" src="/static/audio/les.mp3" loop></audio>
+
+    <div class="logo"></div>
+    <section class="layers">
+        <div class="layers__container">
+            <div class="layers__item layer-1"></div>
+            <div class="layers__item layer-2"></div>
+            <div class="layers__item layer-3">
+                <div class="index-content">
+                    <h1>Riviera<span>deluxe cottage village</span></h1>
+                    <div class="index-content__tagline"><i>Watching the silence</i></div>
+                    <a href="{{ url_for('main') }}" class="button-start">Start</a>
+                </div>
+            </div>
+            <div class="layers__item layer-4"></div>
+        </div>
+    </section>
+
+</body>
+</html>

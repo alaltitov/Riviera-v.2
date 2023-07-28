@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riviera main page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js" defer></script>
+    <script src="/static/libs/inputmask.min.js" defer></script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=d27fc1e7-5f7a-4785-a0f6-ac6c1ad5797c&lang=ru_RU" type="text/javascript" defer></script>
+    <script src="/static/js/main.js" defer></script>
+</head>
+<body>
+
+    <div class="btn__up">
+        <a href="#home"><span class="material-symbols-outlined arrow">arrow_upward_alt</span></a>
+    </div>
+
+
+    <div id="modal__login" data-modal class="modal hidden">
+        <div class="modal__main">
+            <div class="modal__title">Авторизация</div>
+            <div class="modal__error">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            {% if category == 'login_danger' %}
+                                <script src="/static/js/temps/login.js"></script>
+                                <div class="alert__danger">{{ message }}</div>
+                            {% else %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div class="modal__container">
+                <form action="{{ url_for('login') }}" method="post" novalidate>
+                    {{ form_login.csrf_token() }}
+                    <ul>
+                        {% if form_login.errors %}
+                        <script src="/static/js/temps/login.js"></script>
+                        {% endif %}
+                        <li> 
+                            {% if form_login.errors['login'] %}
+                            {{ form_login.login() }}
+                            <span class="errors">{{ form_login.errors['login'][0] }}</span>
+                            {% else %}
+                            {{ form_login.login() }}
+                            {% endif %}   
+                        </li>
+                        <li>
+                            {% if form_login.errors['password'] %}
+                            {{ form_login.password() }}
+                            <span class="errors">{{ form_login.errors['password'][0] }}</span>
+                            {% else %}
+                            {{ form_login.password() }}
+                            {% endif %}
+                        </li>
+                        <li class="form__login-check">
+                            {{ form_login.remember() }}
+                            {{ form_login.remember.label() }}
+                        </li>
+                        <li>
+                            {{ form_login.submit() }}
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <button data-modal-close type="button" class="btn__close">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="modal__register" data-modal class="modal hidden">
+        <div class="modal__main">
+            <div class="modal__title">Регистрация</div>
+            <div class="modal__container-row">
+                <form action="{{ url_for('register') }}" method="post" novalidate>
+                    {{ form_register.csrf_token() }}
+                    <ul>
+                        {% if form_register.errors %}
+                        <script src="/static/js/temps/register.js"></script>
+                        {% endif %}
+                        <div>
+                            <li> 
+                                {% if form_register.errors['login'] %}
+                                {{ form_register.login() }}
+                                <span class="errors">{{ form_register.errors['login'][0] }}</span>
+                                {% else %}
+                                {{ form_register.login() }}
+                                {% endif %}   
+                            </li>
+                            <li>
+                                {% if form_register.errors['password'] %}
+                                {{ form_register.password() }}
+                                <span class="errors">{{ form_register.errors['password'][0] }}</span>
+                                {% else %}
+                                {{ form_register.password() }}
+                                {% endif %}
+                            </li>
+                            <li>
+                                {% if form_register.errors['password1'] %}
+                                {{ form_register.password1() }}
+                                <span class="errors">{{ form_register.errors['password1'][0] }}</span>
+                                {% else %}
+                                {{ form_register.password1() }}
+                                {% endif %}
+                            </li>
+                            <li>
+                                {% if form_register.errors['pin'] %}
+                                {{ form_register.pin() }}
+                                <span class="errors">{{ form_register.errors['pin'][0] }}</span>
+                                {% else %}
+                                {{ form_register.pin() }}
+                                {% endif %}
+                            </li>
+                        </div>
+                        
+                        <div>
+                            <li>
+                                {% if form_register.errors['name'] %}
+                                {{ form_register.name() }}
+                                <span class="errors">{{ form_register.errors['name'][0] }}</span>
+                                {% else %}
+                                {{ form_register.name() }}
+                                {% endif %}
+                            </li>
+                            <li>
+                                {% if form_register.errors['email'] %}
+                                {{ form_register.email() }}
+                                <span class="errors">{{ form_register.errors['email'][0] }}</span>
+                                {% else %}
+                                {{ form_register.email() }}
+                                {% endif %}
+                            </li>
+                            <li>
+                                {% if form_register.errors['tel'] %}
+                                {{ form_register.tel() }}
+                                <span class="errors">{{ form_register.errors['tel'][0] }}</span>
+                                {% else %}
+                                {{ form_register.tel() }}
+                                {% endif %}
+                            </li>
+                            <li>
+                                {% if form_register.errors['address'] %}
+                                {{ form_register.address() }}
+                                <span class="errors">{{ form_register.errors['address'][0] }}</span>
+                                {% else %}
+                                {{ form_register.address() }}
+                                {% endif %}
+                            </li>
+                        </div>
+                    </ul>
+                    <div class="form__register-btn">
+                        {{ form_register.submit() }}
+                    </div>
+                </form>
+            </div>
+            <button data-modal-close type="button" class="btn__close">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            </div>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div id="modal__reg" data-modal class="modal hidden">
+                <div class="modal__main">
+                    <div class="modal__container">
+                        {% if category == 'register_success' %}
+                            <div class="alert__success">{{ message }}</div>
+                            <script src="/static/js/temps/reg.js"></script>
+                        {% elif category == 'register_danger' %}
+                            <div class="alert__danger">{{ message }}</div>
+                            <script src="/static/js/temps/reg.js"></script>
+                        {% endif %}
+                    </div>
+                    <button data-modal-close type="button" class="btn__close">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div id="modal__feedback" data-modal class="modal hidden">
+                <div class="modal__main">
+                    <div class="modal__container">
+                        {% if category == 'feedback_success' %}
+                            <div class="alert__success">{{ message }}</div>
+                            <script src="/static/js/temps/feedback.js"></script>
+                        {% elif category == 'feedback_danger' %}
+                            <div class="alert__danger">{{ message }}</div>
+                            <script src="/static/js/temps/feedback.js"></script>
+                        {% endif %}
+                    </div>
+                    <button data-modal-close type="button" class="btn__close">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+    <header class="header" id="home">
+        <div class="container">
+            <div class="header__top">               
+                <nav class="nav">
+                    <h2 class="nav__logo">
+                        <a href="#!"><img src="/static/img/logo_white.svg" alt="logo"></a>
+                    </h2>
+                
+                    <ul class="nav__list">
+                        <li><a href="#about">О поселке</a></li>
+                        <li><a href="#houses">Дома</a></li>
+                        <li><a href="#contacts">Контакты</a></li>
+                    </ul>
+              
+                    <ul class="nav__login">
+                        <li><button type="button" class="btn btn__register" data-modal-btn="modal__register">Регистрация</button></li>
+                        <li><button type="button" class="btn btn__login" data-modal-btn="modal__login">Вход</button></li>
+                    </ul>
+
+                    <button type="button" class="nav__toggle">
+                        <div class="nav__btn"><div class="nav__btn-icon"></div></div>
+                    </button>
+                </nav>
+            </div>
+
+            <div class="header__content">         
+                <h1 class="header__title"">Riviera <span>forest club</span></h1>
+                <div class="header__text"><p>{{ text[0].content }}</p></div>
+                <a href="#details" class="btn header__btn">Подробнее</a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+
+        <section class="about" id="about">
+            <div class="container">
+                <div class="about-row">
+                    <div class="about__content">
+                        <h2 class="about__label"><span>О поселке</span></h2>
+                        <h3 class="about__title"><p>{{ text[1].content }}</p></h3>
+                        <div class="about__text"><p>{{ text[2].content }}</p></div>
+                    </div>
+                    <div class="about__image">
+                        <img src="/static/img/main/interior.jpg" alt="interior">
+                    </div>              
+                </div>
+            </div>
+        </section>
+
+        <section class="details" id="details">
+            <div class="container">
+                <div class="details-grid">
+                    <div class="details__card">
+                        <span class="material-symbols-outlined icons">pin_drop</span>
+                        <h3 class="details__title">Расположение</h3>
+                        <div class="details__text"><p>{{ text[3].content }}</p></div>
+                    </div>
+
+                    <div class="details__card">
+                        <span class="material-symbols-outlined icons">shopping_cart</span>
+                        <h3 class="details__title">Инфраструктура</h3>
+                        <div class="details__text"><p>{{ text[4].content }}</p></div>
+                    </div>
+
+                    <div class="details__card">
+                        <span class="material-symbols-outlined icons">emoji_objects</span>
+                        <h3 class="details__title">Коммуникации</h3>
+                        <div class="details__text"><p>{{ text[5].content }}</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="houses" id="houses">
+            <div class="container">
+                <div class="houses-row">
+                    <div class="houses__content">        
+                        <h2 class="houses__label">
+                            <span>Дома в продаже</span>
+                        </h2>
+                        <h3 class="houses__title">
+                            <p>Выберите свой дом мечты</p>
+                        </h3>
+                        <div class="houses__text"><p>{{ text[6].content }}</p></div>
+                        <a href="#feedback" class="btn houses__btn">Подобрать</a>
+                    </div>  
+                    <div class="swiper slider">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="/static/img/main/slider1.jpeg" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="/static/img/main/slider2.jpeg" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="/static/img/main/slider3.jpeg" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="/static/img/main/slider4.jpeg" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="/static/img/main/slider5.jpeg" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="/static/img/main/slider6.jpeg" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="/static/img/main/slider7.jpeg" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="/static/img/main/slider8.jpeg" />
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="/static/img/main/slider9.jpeg" />
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="offer">
+            <div class="container">
+                <div class="offer-row">
+                    <div class="offer__content">
+                        <div class="offer__title">
+                            Специальное предложение
+                        </div>
+                        <div class="offer__text">{{ text[7].content }}</div>
+                        <div class="offer__sale">
+                            <div class="offer__price">
+                                <s>{{ text[8].content }}</s><span>{{ text[9].content }}</span>
+                            </div>
+                            <img src="/static/img/main/offer.svg" alt="offer" class="offer__label">
+                        </div>
+                    </div>
+                    <div class="offer__house">
+                        <img src="/static/img/main/slider5.jpeg" alt="offer-house" class="offer__image">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="feedback" id="feedback">
+            <div class="container">
+                <div class="feedback__title">
+                    <h2>Хотите посмотреть или купить дом?</h2>
+                </div>
+                <div class="feedback-row">
+                    <div class="feedback__text"><p>{{ text[10].content }}</p></div>
+                    <form action="{{ url_for('feedback') }}" class="feedback__form" method="post" novalidate>
+                        {{ form_feedback.csrf_token() }}
+                        {% if form_feedback.errors['name'] %}
+                        <script> window.location.hash="#feedback"; </script>
+                        <div>
+                            {{ form_feedback.name() }}
+                            <span class="errors">{{ form_feedback.errors['name'][0] }}</span>
+                        </div>
+                        {% else %}
+                        {{ form_feedback.name() }}
+                        {% endif %}
+                        {% if form_feedback.errors['tel'] %}
+                        <script> window.location.hash="#feedback"; </script>
+                        <div>
+                            {{ form_feedback.tel() }}
+                            <span class="errors">{{ form_feedback.errors['tel'][0] }}</span>
+                        </div>
+                        {% else %}
+                        {{ form_feedback.tel() }}
+                        {% endif %}
+                        <p class="form__privacy">
+                            * Мы никому не передаем Ваши данные
+                        </p>
+                        {{ form_feedback.submit(class_="form__feedback-btn") }}
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-map" id="contacts">
+            <div class="container">
+                <div class="map__title"><h2>Местоположение</h2></div>
+                <div class="map__image" id="map"></div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__grid">
+                <h2 class="footer__logo">
+                    <a href="#!"><img src="/static/img/logo_grey.svg" alt="logo"></a>
+                </h2>
+                <ul class="footer__nav">
+                    <li><a href="#about">О поселке</a></li>
+                    <li><a href="#houses">Дома</a></li>
+                    <li><a href="#contacts">Контакты</a></li>
+                </ul>
+                <div class="footer__contacts">
+                    <ul class="footer__address">
+                        <li>Адрес: 152001, г. Москва, ул. 7-я Ямская, д. 24</li>
+                        <li><a href="tel:+76990101010">Телефон: 8 (699) 010-1010</a></li>
+                        <li>Отдел продаж: 10:00 - 19:00</li>
+                        <li><a href="mailto:info@riviera_deluxe.ru">E-mail: info@riviera_deluxe.ru</a></li>
+                    </ul>
+                    <ul class="footer__social">
+                        <li><a href="http://vk.com"><i class="fa-brands fa-vk"></i></a></li>
+                        <li><a href="http://youtube.com"><i class="fa-brands fa-youtube"></i></a></li>
+                        <li><a href="http://instagram.com"><i class="fa-brands fa-instagram"></i></a></li>
+                        <li><a href="http://t.me"><i class="fa-brands fa-telegram"></i></a></li>
+                    </ul>    
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

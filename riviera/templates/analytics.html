@@ -1,0 +1,235 @@
+{% extends 'lk.html' %}
+
+{% block content %}
+
+<div class="dashboard-container">
+    <div class="dashboard__grid">
+        <div class="dashboard__balance">
+            <div class="dashboard__balance-title">
+                <span class="material-symbols-outlined balance">monetization_on</span>
+                <span>Баланс:</span>
+            </div>
+            <div class="dashboard__balance-value">
+                {% if profile.balance < 0 %}
+                <div class="negative">{{ profile.balance / 100}}</div>
+                {% else %}
+                <div class="positive">{{ profile.balance / 100}}</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="dashboard__utility-electro">
+            <div class="dashboard__utility-electro__title">
+                <span class="material-symbols-outlined electro">electrical_services</span>
+                <span>Тариф: {{ service[0].tariff / 100 }} р.</span>
+            </div>
+            <div class="dashboard__utility-electro__utility">
+                <div>Текущие показания:</div>
+                <span>{{ utility[-1].value_electro }}</span>
+            </div>
+        </div>
+        <div class="dashboard__utility-gas">
+            <div class="dashboard__utility-gas__title">
+                <span class="material-symbols-outlined gas">mode_heat</span>
+                <span>Тариф: {{ service[1].tariff / 100 }} р.</span>
+            </div>
+            <div class="dashboard__utility-gas__utility">
+                <div>Текущие показания:</div>
+                <span>{{ utility[-1].value_gas }}</span>
+            </div>
+        </div>
+        <div class="dashboard__utility-water">
+            <div class="dashboard__utility-water__title">
+                <span class="material-symbols-outlined water">water_drop</span>
+                <span>Тариф: {{ service[2].tariff / 100 }} р.</span>
+            </div>
+            <div class="dashboard__utility-water__utility">
+                <div>Текущие показания:</div>
+                <span>{{ utility[-1].value_water }}</span>
+            </div>
+        </div>
+        {% if not flag %}
+        <div class="empty">
+            показания пока не передавались
+        </div>
+        {% else %}
+        <div class="dashboard__chart-main">
+            <canvas id="lineChart"></canvas>             
+        </div>
+        <div class="dashboard__chart-pie">
+            <canvas id="pieChart"></canvas> 
+        </div>
+        {% endif %}
+
+        <div class="dashboard__footer">
+            <div class="dashboard__footer-title">
+                <div class="dashboard__footer-title-label">Последний платеж</div>
+                <div class="dashboard__footer-title-link"><a href="{{ url_for('history') }}">Смотреть все</a></div>
+            </div>
+            {% if flag_pay %}
+            <ul class="dashboard__footer-payment">
+                <li>{{ payments[-1].date }}</li>
+                <li>{{ payments[-1].payment_id }}</li>
+                <li>{{ payments[-1].payment_summ |int / 100 }} RUB</li>
+                {% if payments[-1].status %}
+                <li class="success">оплачено</li>
+                {% else %}
+                <li class="fail">не оплачено</li>
+                {% endif %}
+            </ul>
+            {% else %}
+            <ul class="dashboard__footer-payment"><div class="pay__none">платежей нет</div></ul>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    class Custom extends Chart.LineController {
+        draw() {
+            super.draw(arguments);
+            const ctx = this.chart.ctx;
+            const _stroke = ctx.stroke;
+            ctx.stroke = function() {
+                ctx.save();
+                ctx.shadowColor = 'black';
+                ctx.shadowBlur = 20;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 4;
+                _stroke.apply(this, arguments);
+                ctx.restore();
+            }
+        }
+    };
+
+    Custom.id = 'shadowLine';
+    Custom.defaults = Chart.LineController.defaults;
+    Chart.register(Custom);
+
+    Chart.defaults.font.size = 10;
+    var ctx = document.getElementById('lineChart').getContext('2d');
+    const gradientBgelectro = ctx.createLinearGradient(0, 0, 0, 300);
+    gradientBgelectro.addColorStop(0, 'rgba(255, 205, 86, .7)');
+    gradientBgelectro.addColorStop(0.5, 'rgba(255, 205, 86, .2)');
+    gradientBgelectro.addColorStop(1, 'transparent');
+
+    const gradientBggas = ctx.createLinearGradient(0, 0, 0, 300);
+    gradientBggas.addColorStop(0, 'rgb(88, 170, 99, .7)');
+    gradientBggas.addColorStop(0.5, 'rgba(88, 170, 99, .2)');
+    gradientBggas.addColorStop(1, 'transparent');
+
+    const gradientBgwater = ctx.createLinearGradient(0, 0, 0, 300);
+    gradientBgwater.addColorStop(0, 'rgba(54, 162, 235, .7)');
+    gradientBgwater.addColorStop(0.5, 'rgba(54, 162, 235, .2)');
+    gradientBgwater.addColorStop(1, 'transparent');
+
+    var lineChart = new Chart(ctx, {
+        type: 'shadowLine',
+        data: {
+            labels: {{ date | safe }},
+            datasets: [
+                {
+                    label: 'эл.энергия',
+                    data: {{ electro_value[::-1] |safe }},
+                    fill: true,
+                    borderColor: "rgba(255, 205, 86, .9)",
+                    backgroundColor: gradientBgelectro,
+                    pointBackgroundColor: "rgba(255, 205, 86, .9)",
+                    lineTension: .5,
+                },
+
+                {
+                    label: 'газ',
+                    data: {{ gas_value[::-1] |safe }},
+                    fill: true,
+                    borderColor: "rgb(88, 170, 99, .9)",
+                    backgroundColor: gradientBggas,
+                    pointBackgroundColor: "rgb(88, 170, 99, .9)",
+                    lineTension: .5
+                },
+
+                {
+                    label: 'вода',
+                    data: {{ water_value[::-1] |safe }},
+                    fill: true,
+                    borderColor: "rgba(54, 162, 235, .9)",
+                    backgroundColor: gradientBgwater,
+                    pointBackgroundColor: "rgba(54, 162, 235, .9)",
+                    lineTension: .5
+                },
+            ]
+        },
+
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+    Chart.defaults.font.size = 10;
+    var ctx1 = document.getElementById('pieChart').getContext('2d');
+    var pieChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['эл. энергия', 'газ', 'вода'],
+            datasets: [{
+                label: 'затраты в рублях за последний месяц',
+                data: {{ chart_pie |safe }},
+                backgroundColor: [
+                'rgba(255, 205, 86, .2)',
+                'rgb(88, 170, 99, .2)',
+                'rgba(54, 162, 235, .2)'
+                ],
+                hoverBackgroundColor: [
+                'rgba(255, 205, 86, .8)',
+                'rgb(88, 170, 99, .8)',
+                'rgba(54, 162, 235, .8)'
+                ],
+                borderColor: [
+                'rgb(255, 205, 86)',
+                'rgb(88, 170, 99)',
+                'rgb(54, 162, 235)'
+                ],
+                borderWidth: 2,
+                borderRadius: 0           
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        boxWidth: 0
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });     
+</script>
+
+
+{% endblock %}

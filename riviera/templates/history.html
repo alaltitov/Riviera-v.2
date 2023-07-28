@@ -1,0 +1,124 @@
+{% extends 'lk.html' %}
+
+{% block content %}
+
+<ul class="history__list">
+    <li class="history__list-item utility" data-tab="utility" id="t_utility">Показания</li>
+    <li class="history__list-item balance history__hover" data-tab="balance" id="t_balance">Баланс</li>
+    <li class="history__list-item payments history__hover" data-tab="payments" id="t_payments">Платежи</li>
+</ul>
+
+<div class="history">
+    <div class="history__content">
+        <div class="history__content" data-tab-content id="utility">
+            <div class="table__analytics">
+                <ul class="table__analytics-labels">
+                    
+                    <li class="table__analytics-labels-first"><div>Дата</div></li>
+                    <li>
+                        <div class="table__title">
+                            <span class="material-symbols-outlined electro">electrical_services</span>
+                            <div class="utility__hidden">Эл/эн</div> 
+                        </div>
+                    </li>
+                    <li>
+                        <div class="table__title">
+                            <span class="material-symbols-outlined gas">mode_heat</span>
+                            <div class="utility__hidden">Газ</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="table__title">
+                            <span class="material-symbols-outlined water">water_drop</span>
+                            <div class="utility__hidden">Вода</div>
+                        </div>
+                    </li>
+                    <li><div>Сумма</div></li>
+                    <li class="table__analytics-labels-last"><div>Статус</div></li>
+            
+                </ul>
+                
+                {% set summ = namespace(arg=balance_sum) %}
+                {% for i in utility[1:] %}
+                <ul class="table__columns">
+                    <li class="table__column-date"><div>{{ i.date.strftime('%d-%m-%Y') }}</div></li>
+                    <li class="table__column-utility"><div>{{ i.value_electro }}</div></li>
+                    <li class="table__column-utility"><div>{{ i.value_gas }}</div></li>
+                    <li class="table__column-utility"><div>{{ i.value_water }}</div></li>
+                    <li class="table__column-sum"><div>{{ i.summ / 100 }} p.</div></li>
+                    {% if summ.arg - i.summ |int >= 0 %}
+                        <li class="table__column-status">
+                            <div class="text__success">оплачено</div>
+                        </li>
+                    {% else %}
+                        <li class="table__column-status">
+                            <div class="text__danger">не оплачено</div>
+                        </li>
+                    {% endif %}
+                    {% set summ.arg = (summ.arg - i.summ |int) %}
+                </ul>
+                {% endfor %}
+                
+            </div>
+        </div>
+        <div class="history__content history__hidden" data-tab-content id="balance">
+            <div class="table__analytics">
+                <ul class="table__analytics-labels"> 
+                    <li class="table__analytics-labels-first"><div>Дата</div></li>
+                    <li><div>Дебет</div></li>
+                    <li><div>Кредит</div></li>
+                    <li class="table__analytics-labels-last"><div>Баланс</div></li>
+                </ul>
+                {% for i, row in df.iterrows() %}
+                <ul class="table__columns">
+                    <li class="table__column-date"><div>{{ i.strftime('%d-%m-%Y') }}</div></li>
+                    {% if row.debet != 0 and row.kredit != 0 %}
+                        <li class="table__column-dk"><div>{{ row.debet }}</div></li>
+                        <li class="table__column-dk"><div>{{ row.kredit }}</div></li>
+                    {% elif row.debet != 0 and row.kredit == 0 %}
+                        <li class="table__column-dk"><div>{{ row.debet }}</div></li>
+                        <li class="table__column-dk">-</li>
+                    {% elif row.debet == 0 and row.kredit != 0 %}
+                        <li class="table__column-dk">-</li>
+                        <li class="table__column-dk"><div>{{ row.kredit }}</div></li>
+                    {% else %}
+                        <li class="table__column-dk">-</li>
+                        <li class="table__column-dk">-</li>
+                    {% endif %}
+                    {% if row.balance >= 0 %}
+                        <li class="table__column-balance"><div class="text__success">{{ row.balance }}</div></li>
+                    {% else %}
+                        <li class="table__column-balance"><div class="text__danger">{{ row.balance }}</div></li>
+                    {% endif %}
+                </ul>
+                {% endfor %}               
+            </div>
+        </div>
+        <div class="history__content history__hidden" data-tab-content id="payments">
+            <div class="table__analytics">
+                <ul class="table__analytics-labels"> 
+                    <li class="table__analytics-labels-first"><div>Дата</div></li>
+                    <li><div>Номер транзакции</div></li>
+                    <li><div>Сумма</div></li>
+                    <li class="table__analytics-labels-last"><div>Статус</div></li>
+                </ul>
+                {% for i in payments %}
+                <ul class="table__columns">
+                    <li class="table__column-date">{{ i.date.strftime('%d-%m-%Y %H:%M') }}</li>
+                    <li class="table__column-payment">{{ i.payment_id }}</li>
+                    <li class="table__column-payment">{{ i.payment_summ |int / 100 }} RUB</li>
+                    {% if i.status %}
+                        <li class="table__column-status"><div class="text__success">оплачено</div></li>
+                    {% else %}
+                        <li class="table__column-status"><div class="text__danger">не оплачено</div></li>
+                    {% endif %}
+                </ul>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

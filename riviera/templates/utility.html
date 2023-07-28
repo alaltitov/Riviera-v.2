@@ -1,0 +1,138 @@
+{% extends 'lk.html' %}
+
+{% block content %}
+
+<div class="s_utility">
+    <div class="utility__main">
+        <div class="utility__title">Передача показаний</div>
+        <div class="utility__container">
+            <form action="{{ url_for('utility') }}" method="post" novalidate>
+                {{ form_utility.csrf_token() }}
+                <ul>
+                    <li> 
+                        {% if form_utility.errors['electro'] %}
+                        {{ form_utility.electro() }}
+                        <span class="errors">{{ form_utility.errors['electro'][0] }}</span>
+                        {% else %}
+                        {{ form_utility.electro() }}
+                        {% endif %}   
+                    </li>
+                    <li> 
+                        {% if form_utility.errors['gas'] %}
+                        {{ form_utility.gas() }}
+                        <span class="errors">{{ form_utility.errors['gas'][0] }}</span>
+                        {% else %}
+                        {{ form_utility.gas() }}
+                        {% endif %}   
+                    </li>
+                    <li> 
+                        {% if form_utility.errors['water'] %}
+                        {{ form_utility.water() }}
+                        <span class="errors">{{ form_utility.errors['water'][0] }}</span>
+                        {% else %}
+                        {{ form_utility.water() }}
+                        {% endif %}   
+                    </li>
+                    <li>
+                        {{ form_utility.submit() }}
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <a href="{{ url_for('analytics') }}" class="btn__close">
+            <span class="material-symbols-outlined">close</span>
+        </a>
+    </div>
+</div>
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div id="modal__utility" data-modal class="modal hidden">
+                <div class="modal__main">
+                    <div class="modal__container">
+                        {% if category == 'utility_success' %}
+                            <div class="calculations">
+                                <div class="calculations__container">
+                                    <div class="calculations__main">
+                                        <div class="alert__success">{{ message }}</div>
+                                        <script src="/static/js/temps/utility.js"></script>
+                                        <div class="calculations__block electro__utility">
+                                            <div class="block-wrapper">
+                                                <div class="material-symbols-outlined yellow">electrical_services</div>
+                                                <div class="calculations__block-head">
+                                                    <div class="calculations__block-head-title">Показания электричества</div>
+                                                    <div class="calculations__block-head-text">Начислено по счетчику</div>    
+                                                </div>
+                                            </div>
+                                            <div class="calculations__block-content">
+                                                <div class="calculations__block-content-data">{{ utility[-1].value_electro }} - {{ utility[-2].value_electro }} = {{ utility[-1].value_electro - utility[-2].value_electro }} кВт</div>
+                                                <div class="calculations__block-content-data">{{ utility[-1].value_electro - utility[-2].value_electro }} м³ x {{ service[0].tariff / 100 }} р. = {{ (utility[-1].value_electro - utility[-2].value_electro) * service[0].tariff / 100 }} р.</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="calculations__block gas__utility">
+                                            <div class="block-wrapper">
+                                                <div class="material-symbols-outlined green">mode_heat</div>
+                                                <div class="calculations__block-head">
+                                                    <div class="calculations__block-head-title">Показания газа</div>
+                                                    <div class="calculations__block-head-text">Начислено по счетчику</div>
+                                                </div>    
+                                            </div>
+                                            <div class="calculations__block-content">
+                                                <div class="calculations__block-content-data">{{ utility[-1].value_gas }} - {{ utility[-2].value_gas }} = {{ utility[-1].value_gas - utility[-2].value_gas }} м³</div>
+                                                <div class="calculations__block-content-data">{{ utility[-1].value_gas - utility[-2].value_gas }} м³ x {{ service[1].tariff / 100 }} р. = {{ (utility[-1].value_gas - utility[-2].value_gas) * service[1].tariff / 100 }} р.</div>
+                                            </div>
+                                        </div>
+                            
+                                        <div class="calculations__block water__utility">
+                                            <div class="block-wrapper">
+                                                <div class="material-symbols-outlined blue">water_drop</div>
+                                                <div class="calculations__block-head">
+                                                    <div class="calculations__block-head-title">Показания водоснабжения</div>
+                                                    <div class="calculations__block-head-text">Начислено по счетчику</div>
+                                                </div>    
+                                            </div>
+                                            <div class="calculations__block-content">
+                                                <div class="calculations__block-content-data">{{ utility[-1].value_water }} - {{ utility[-2].value_water }} = {{ utility[-1].value_water - utility[-2].value_water }} м³</div>
+                                                <div class="calculations__block-content-data">{{ utility[-1].value_water - utility[-2].value_water }} м³ x {{ service[2].tariff / 100 }} р. = {{ (utility[-1].value_water - utility[-2].value_water) * service[2].tariff / 100 }} р.</div>
+                                            </div>
+                                        </div>
+                            
+                                        <div class="calculations__block garbage__utility">
+                                            <div class="block-wrapper">
+                                                <div class="material-symbols-outlined crimson">delete</div>
+                                                <div class="calculations__block-head">
+                                                    <div class="calculations__block-head-title">Оплата за вывоз мусора</div>
+                                                </div>
+                                            </div>
+                                            <div class="calculations__block-content">
+                                                <div class="calculations__block-content-data">{{ service[3].tariff / 100 }} р.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="{{ url_for('analytics') }}" class="btn__close">
+                                        <span class="material-symbols-outlined">close</span>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                        {% elif category == 'utility_danger' %}
+                            <div class="alert__danger">{{ message }}</div>
+                            <script src="/static/js/temps/utility.js"></script>
+                        {% endif %}
+                    </div>
+                    <button data-modal-close type="button" class="btn__close">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+                
+
+{% endblock %}

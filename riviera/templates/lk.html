@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="/static/css/lk.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.1/chart.umd.js" integrity="sha512-ffRiucC+agltyOFQv5837tFGHFHq9tvevCk+mLE7pawA7SVgRS9TXFOT1bmHF8/aG/Pt7Bq7q94RSfuem/qKvw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/static/libs/inputmask.min.js" defer></script>
+    <script src="/static/js/lk.js" defer></script>
+</head>
+<body>
+
+    <!-- dashboard -->
+      
+    <div class="dashboard">
+        <div class="dashboard__nav">
+            <nav class="nav">
+                <div class="nav__logo">
+                    <img src="/static/img/logo_grey.svg" alt="logo">
+                </div>
+                <div class="nav__list">
+        
+                    <ul class="nav__list-icons">
+                        <li>
+                            <a href="{{ url_for('pay') }}">
+                                <span class="material-symbols-outlined">account_balance_wallet</span>
+                                <div class="nav__list-icons-text">Оплатить</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('analytics') }}">
+                                <span class="material-symbols-outlined">finance</span>
+                                <div class="nav__list-icons-text">Аналитика</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('history') }}">
+                                <span class="material-symbols-outlined">list_alt</span>
+                                <div class="nav__list-icons-text">История</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('utility') }}">
+                                <span class="material-symbols-outlined">electric_meter</span>
+                                <div class="nav__list-icons-text">Показания</div>
+                            </a>
+                        </li>
+                        <li class="nav__list-icons-last">
+                            <a href="{{ url_for('logout') }}">
+                                <span class="material-symbols-outlined">logout</span>
+                                <div class="nav__list-icons-text">Выйти</div>
+                            </a>
+                        </li>
+                    </ul>
+     
+                </div>
+            </nav>
+        </div>
+        <div class="dashboard__body">
+            <div class="dashboard__header">
+                <div class="dashboard__header-title">Личный кабинет</div>
+                <div class="dashboard__header-login">
+                    <span class="material-symbols-outlined user">account_circle</span>
+                    <span>{{ profile.name }}</span>
+                </div>
+            </div>
+            {% block content %} {% endblock %}
+        </div>
+    </div>
+
+</body>
+</html>
