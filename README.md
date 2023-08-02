@@ -8,7 +8,7 @@
 
 <p align="center">
     <img alt="Static Badge" src="https://img.shields.io/badge/made%20by-alaltitov-blue">
-    <img alt="Static Badge" src="https://img.shields.io/badge/version-v1.0%20Alpha-green">
+    <img alt="Static Badge" src="https://img.shields.io/badge/version-v2.0%20Alpha-green">
     <img alt="Static Badge" src="https://img.shields.io/badge/python-v3.9.0-yellow">
     <img alt="Static Badge" src="https://img.shields.io/badge/license-MIT-orange">
 </p>
