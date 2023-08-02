@@ -1,9 +1,9 @@
 <p align="center">
-    <img src="https://github.com/alaltitov/docs_riviera/blob/5148ea802210fc023b495d6f29133697042dff7d/Logo.svg" width="200">
+    <img src="https://github.com/alaltitov/docs_riviera/blob/4a315b060ec3e7ee0d5fb583bc896da222b9b0a2/logo_color.svg" width="200">
 </p>
 
 <p align="center">
-    <a href="https://www.alaltitov.ru/"></a>
+    <a href="https://riviera.alaltitov.ru/"></a>
 </p>
 
 <p align="center">
@@ -19,8 +19,8 @@
 показаний счетчиков и оплатой коммунальных платежей через Ю-Кассу с простой аналитикой, историей показаний и баланса.<br>
 
 <p align="center">
-  <img src="https://github.com/alaltitov/docs_riviera/blob/5148ea802210fc023b495d6f29133697042dff7d/card.png" height="300">
-  <img src="https://github.com/alaltitov/docs_riviera/blob/5148ea802210fc023b495d6f29133697042dff7d/chart.png" height="300">
+  <img src="https://github.com/alaltitov/docs_riviera/blob/4a315b060ec3e7ee0d5fb583bc896da222b9b0a2/r2_1.png" height="300">
+  <img src="https://github.com/alaltitov/docs_riviera/blob/4a315b060ec3e7ee0d5fb583bc896da222b9b0a2/r2_2.png" height="300">
 </p>
 <p align="center">
   <img src="https://github.com/alaltitov/docs_riviera/blob/5148ea802210fc023b495d6f29133697042dff7d/utility_history.png" height="250">
