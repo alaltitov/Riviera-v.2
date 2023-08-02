@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-    <a href="https://riviera.alaltitov.ru/"></a>
+    https://riviera.alaltitov.ru/
 </p>
 
 <p align="center">
