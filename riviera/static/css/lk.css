@@ -3,11 +3,14 @@
 
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: var(--light)!important;
     transition: background-color 5000s ease-in-out 0s;
-    -webkit-text-fill-color: var(--light);
+    box-shadow: inset 0 0 20px 20px var(--dark)!important;
+	caret-color: var(--dark)!important;
 }
 
 :root {
@@ -478,7 +481,7 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .history__list {
@@ -527,7 +530,7 @@ html, body {
 }
 
 .history__content {
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .history__hidden {
