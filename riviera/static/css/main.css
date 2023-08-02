@@ -39,6 +39,42 @@ html, body {
     scroll-behavior: smooth;
 }
 
+/* preloader */
+
+.preloader {
+    position: fixed;
+    inset: 0 0 0 0;
+    background: #fff;
+    z-index: 1001;
+}
+  
+.preloader__row {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5vh;
+    align-items: center;
+}
+
+.preloader__text {
+    color: black;
+}
+
+.preloader__image {
+    font-size: 70px;
+    color: black;
+}
+
+.loaded_hiding .preloader {
+    transition: 0.3s opacity;
+    opacity: 0;
+}
+
+.loaded .preloader {
+    display: none;
+}
+
 /* icons */
 
 .material-symbols-outlined {

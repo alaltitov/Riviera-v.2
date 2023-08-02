@@ -7,11 +7,28 @@
     <link rel="icon" href="/static/img/logo_color.svg" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="/static/css/lk.css">
+	<script>
+        window.onload = function () {
+          document.body.classList.add('loaded_hiding');
+          window.setTimeout(function () {
+            document.body.classList.add('loaded');
+            document.body.classList.remove('loaded_hiding');
+          }, 500);
+        }
+    </script>
+	<script src="https://kit.fontawesome.com/43124a3f7d.js" crossorigin="anonymous" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.1/chart.umd.js" integrity="sha512-ffRiucC+agltyOFQv5837tFGHFHq9tvevCk+mLE7pawA7SVgRS9TXFOT1bmHF8/aG/Pt7Bq7q94RSfuem/qKvw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/static/libs/inputmask.min.js" defer></script>
     <script src="/static/js/lk.js" defer></script>
 </head>
 <body>
+
+	<div class="preloader">
+        <div class="preloader__row">
+            <div class="preloader__text">Пожалуйста подождите, идет загрузка...</div>
+            <div class="preloader__image"><i class="fa-solid fa-spinner fa-spin"></i></div>
+        </div>
+    </div>
 
     <!-- dashboard -->
       
